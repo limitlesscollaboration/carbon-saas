@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  password String
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+  records EmissionRecord[]
+  reports Report[] 
+}
+
+model Organization {
+  id String @id @default(cuid())
+  name String
+  industry String?
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+  records EmissionRecord[]
+  goals ReductionGoal[]
+  reports Report[] 
+}
+
+model Membership{
+  id String @id @default(cuid())
+  userId String
+  organizationId String
+  role String @default("OWNER")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model EmissionFactor {
+  id String @id @default(cuid())
+  name String
+  category String
+  unit String
+  factor Float
+  factorUnit String
+  description String?
+  createdAt DateTime @default(now())
+
+  records EmissionRecord[]
+}
+
+model EmissionRecord {
+  id String @id @default(cuid())
+  organizationId String
+  emissionFactorId String
+  department String?
+  activityDate DateTime
+  amount Float
+  unit String
+  emissionAmount Float
+  memo String?
+  createdById String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  emissionFactor EmissionFactor @relation(fields:[emissionFactorId], references: [id])
+  createdBy User @relation(fields:[createdById], references: [id])
+}
+
+model ReductionGoal {
+  id String @id @default(cuid())
+  organizationId String
+  targetYear Int
+  targetEmission Float
+  baseYear Int?
+  baseEmission Float?
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model Report {
+  id String @id @default(cuid())
+  organizationId String
+  title String
+  reportType String
+  startDate DateTime
+  endDate DateTime
+  totalEmission Float
+  summary String?
+  createdById String
+  createdAt DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  createdBy User @relation(fields: [createdById], references: [id])
+}
