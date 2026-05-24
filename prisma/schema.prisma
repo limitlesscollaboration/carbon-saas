@@ -52,7 +52,7 @@ model Membership{
 
 model EmissionFactor {
   id String @id @default(cuid())
-  name String
+  name String @unique
   category String
   unit String
   factor Float
