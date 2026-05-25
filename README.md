@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoTrack
 
-## Getting Started
+기업의 탄소 배출 데이터를 등록하고, 감축 목표와 보고서를 관리할 수 있는 탄소 배출 관리 Saas 대시보드입니다.
+제조사, 물류사 등 기업 사용자가 전기, 연료, 운송 등과 관련된 사용 데이터를 입력하면 배출계수를 기준으로 탄소 배출량을 자동 계산하고, 대시보드에서 배출 현황과 목표 대비 사용률을 확인할 수 있습니다.
 
-First, run the development server:
+## 1. 프로젝트 개요
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+EcoTrack은 기업의 탄소 배출량을 효율적으로 관리하기 위한 웹 기반 SaaS 플랫폼입니다.
+사용자는 회사 계정을 생성한 뒤 배율 데이터를 등록할 수 있으며, 등록된 데이터를 바탕으로 총 배출량, 주요 배출 항목, 감축 목표 대비 사용률, 월별 배출량 추이를 확인할 수 있습니다. 또한 감축 목표를 설정하고, 특정 기간의 배출 데이터를 기반으로 보고서를 생성할 수 있습니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2. 개발 목적
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+본 프로젝트는 단순한 데이터 입력 화면을 넘어, 기업이 탄소 배출 현황을 한눈에 파악하고 감축 목표를 관리할 수 있는 대시보드를 구현하는 것을 목표로 했습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+특히 다음 기능을 중점적으로 구현했습니다.
 
-## Learn More
+- 회사별 탄소 배출 데이터 관리
+- 배율계수 기반 탄소 배출량 자동 계산
+- 감축 목표 설정 및 목표 대비 사용률 확인
+- 월별 배출량 추이 시각화
+- 기간별 탄소 배율 보고서 생성
+- 권한에 따른 수정 및 삭제 제어
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 3. 주요 기능
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3.1 회원가입 및 로그인
 
-## Deploy on Vercel
+  - 사용자 계정 생성
+  - 회사 정보 함께 생성
+  - 로그인 후 회사 소속 정보 기준으로 데이터 조회
+  - 프로필 메뉴를 통한 로그아웃
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3.2 대시보드
+ - 총 배출량 확인
+ - 등록 데이터 수 확인
+ - 주요 배출 항목 확인
+ - 목표 대비 사용률 확인
+ - 회사 및 사용자 정보 표시
+ - 감축 목표 현황 표시
+ - 월별 배출량 추이 그래프 표시
+ - 최근 배출 기록 확인
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### 3.3 배출 데이터 관리
+
+- 배출 항목 선택
+- 부서, 사용일, 사용량, 비고 입력
+- 배출계수 기준 탄소 배출량 자동 계산
+- 배출 데이터 목록 조회
+- 배출 데이터 수정
+- 배출 데이터 삭제
+- OWNER, ADMIN 권한 사용자만 수정 및 삭제 가능
+
+### 3.4 감축 목표 관리
+
+- 목표 연도 설정
+- 목표 배출량 입력
+- 기준 연도 및 기준 배출량 입력
+- 감축 목표 등록
+- 감축 목표 수정
+- 감축 목표 삭제
+- 대시보드에서 목표 대비 사용률 확인
+
+### 3.5 보고서 관리
+
+- 보고서 제목 입력
+- 월간, 연간, 사용자 지정 보고서 유형 선택
+- 시작일과 종료일 기준 보고서 생성
+- 기간 내 배출 데이터 기반 총 배출량 계산
+- 보고서 목록 조회
+- 보고서 상세 페이지 조회
+- 보고서에 포함된 배출 데이터 확인
+
+## 4. 기술 스택
+
+| 구분 | 사용 기술 |
+|---|---|
+| Frontend | Next.js, React, TypeScript |
+| Backend | Next.js Server Actions |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Version Control | Git, GitHub |
+
+## 5. 프로젝트 구조
+
+![프로젝트 구조](./screenshot/프로젝트 구조.png)
+
+## 6. 주요 화면
+
+## 7. 데이터 처리 방식
+
+배출 데이터 등록 시 사용자가 선택한 배출 항목의 배출계수를 기준으로 탄소 배출량을 계산합니다.
+
+탄소 배출량 = 사용량 * 배출계수
+
+계산된 배출량은 데이터베이스에 저장되고, 대시보드의 총 배출량, 월별 배출량 추이, 보고서 생성에 활용됩니다.
+
+## 8. 권한 처리
+
+사용자는 회사 소속 정보를 기준으로 데이터를 조회합니다.
+권한은 다음과 같이 구분했습니다.
+| 권한 | 설명 | 가능 작업 |
+|---|---|---|
+| OWNER | 회사 소유자 | 조회, 등록, 수정, 삭제 |
+| ADMIN | 관리자 | 조회, 등록, 수정, 삭제 |
+| MEMBER | 일반 사용자 | 조회 |
+
+## 9. AI 사용 내역
+본 프로젝트는 개발 과정에서 ChatGPT를 보조 도구로 활용했습니다.
+
+AI는 다음 작업에 활용했습니다
+
+- 프로젝트 기능 설계 방향 검토
+- Next.js App Router 구조 작성 보조
+- Prisma 기반 데이터 조회 및 저장 로직 작성 보조
+- Server Actions 오류 원인 분석
+- Hydration 오류 해결 방향 확인
+- UI 레이아웃 개선 방향 제안
+- CSS 스타일 정리
+- README 문서 초안 작성 보조
+
+사용한 주요 Prompt 예시는 다음과 같습니다.
+- Next.js와 Prisma를 사용해서 탄소 배출 데이터 등록 기능을 만들고 싶어.
+- Server Action에서 formData 값이 넘어오지 않는 오류가 발생했는데 어디를 확인해야 할까?
+- 탄소 관리 대시보드 UI를 초록색 환경 느낌으로 개선하고 싶어.
+- 대시보드의 월별 배출량 그래프를 실제 DB 데이터 기준으로 표시하고 싶어.
+
+AI가 제안한 코드는 그대로 사용하지 않고, 프로젝트의 요구사항에 맞게 직접 수정했습니다. 또한 실행 결과를 확인하며 오류를 수정하고, 기능 단위로 커밋을 남겼습니다.
+
+## 10. 커밋 관리
+
+개발 과정에서 기능 단위로 커밋을 나누어 관리했습니다.
+
+주요 커밋 단위는 다음과 같습니다.
+
+- 프로젝트 초기 설정
+- 회원가입 및 로그인 기능 구현
+- 배출 데이터 등록 기능 구현
+- 배출 데이터 수정 및 삭제 기능 구현
+- 감축 목표 등록, 수정, 삭제 기능 구현
+- 보고서 생성 및 상세 조회 기능 구현
+- 대시보드 UI 개선
+- EcoTrack 서비스명 적용
+- 월별 배출량 차트 실제 데이터 반영
+- 로그인 및 회원가입 UI 정리
+
+GitHub 커밋 히스토리를 통해 작업 과정을 확인할 수 있습니다.
+
+## 11. 시연 영상
+
+아래 항목을 중심으로 UI 실행 영상을 녹화했습니다.
+- 회원가입
+- 로그인
+- 대시보드 확인
+- 배출 데이터 등록
+- 배출 데이터 수정 및 삭제
+- 감축 목표 등록
+- 보고서 생성
+- 보고서 상세 조회
+- 로그아웃
+
+
+## 12. 향후 개선 사항
+
+- 사용자 권한 변경 기능 추가
+    - 현재는 회원가입 시 생성된 사용자가 기본적으로 OWNER 권한을 갖습니다.
+    - 향후 OWNER가 다른 사용자를 초대하고 ADMIN 또는 MEMBER 권한을 부여할 수 있도록 개선할 예정입니다.
+- 실제 공공 배출계수 데이터 연동
+- 회사별 다중 사용자 초대 기능
+- 보고서 PDF 다운로드 기능
+- 월별, 항목별 배출량 상세 차트 추가
+- 목표 초과 시 알림 기능
+- 사용자 프로필 이미지 업로드 가능
+- 배포 환경 구성
+
+
