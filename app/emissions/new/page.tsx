@@ -10,7 +10,7 @@ export default async function NewEmissionPage() {
         redirect('/login');
     }
 
-    const emisionFactors = await prisma.emissionFactor.findMany({
+    const emissionFactors = await prisma.emissionFactor.findMany({
         orderBy: {
             name: "asc",
     },
@@ -18,105 +18,68 @@ export default async function NewEmissionPage() {
 
     const today = new Date().toISOString().slice(0, 10);
 
-    return (
-        <main style={{ maxWidth: '640px', margin: '60px auto', padding: '24px' }}>
-            <h1 style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '8px' }}>
-                배출 데이터 등록
-            </h1>
+   return (
+    <main className="form-container">
+      <section className="hero">
+        <h1 className="dashboard-title">배출 데이터 등록</h1>
 
-            <p style={{ color: '#666', marginBottom: '24px' }}>
-                배출 데이터의 사용량을 입력하면 탄소 배출량이 자동 계산됩니다.
-            </p>
+        <p className="dashboard-description">
+          배출 데이터의 사용량을 입력하면 탄소 배출량이 자동 계산됩니다.
+        </p>
 
-            <form
-                action={ createEmissionRecord }
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '14px',
-                    border: '1px solid #ddd',
-                    borderRadius: '12px',
-                    padding: '24px',
-                }}
-            >
-                <label style = {{ fontWeight: 'bold' }}>
-                    배출 항목
-                </label>
-                <select
-                    name="emissionFactorId"
-                    required
-                    style={{ padding: "12px", border: '1px solid #ddd', borderRadius: '8px' }}
-                >
-                    <option value="">배출 항목을 선택하세요</option>
-                    {emisionFactors.map((factor) => (
-                        <option key={factor.id} value={factor.id}>
-                            {factor.name} / 단위: {factor.unit} / 계수 : {factor.factor}
-                        </option>
-                    ))}
-                </select>
+        <div className="leaf-decoration">🌱</div>
+      </section>
 
-                <label style = {{ fontWeight: 'bold' }}>
-                    부서
-                </label>
-                <input
-                    name="department"
-                    placeholder="배출이 발생한 부서를 입력하세요"
-                    required
-                    style={{ padding: "12px", border: '1px solid #ddd', borderRadius: '8px' }}
-                /> 
+      <form action={createEmissionRecord} className="form-card">
+        <label className="form-label">배출 항목</label>
+        <select name="emissionFactorId" required className="form-select">
+          <option value="">배출 항목을 선택하세요</option>
 
-                <label style = {{ fontWeight: 'bold' }}>
-                    사용일
-                </label>
-                <input
-                    name="activityDate"
-                    type="date"
-                    defaultValue={today}
-                    required
-                    style={{ padding: "12px", border: '1px solid #ddd', borderRadius: '8px' }}
-                />
+          {emissionFactors.map((factor) => (
+            <option key={factor.id} value={factor.id}>
+              {factor.name} / 단위: {factor.unit} / 계수: {factor.factor}
+            </option>
+          ))}
+        </select>
 
-                <label style = {{ fontWeight: 'bold' }}>
-                    사용량
-                </label>
-                <input
-                    name="amount"
-                    type="number"
-                    step="0.01"
-                    placeholder="사용량을 입력하세요"
-                    required
-                    style={{ padding: "12px", border: '1px solid #ddd', borderRadius: '8px' }}
-                />
+        <label className="form-label">부서</label>
+        <input
+          name="department"
+          placeholder="배출이 발생한 부서를 입력하세요"
+          required
+          className="form-input"
+        />
 
-                <label style = {{ fontWeight: 'bold' }}>
-                    비고
-                </label>
-                <textarea                    name="notes"
-                    placeholder="추가로 남기고 싶은 내용을 입력하세요 (선택)"
-                    style={{
-                        padding: "12px",
-                        border: '1px solid #ddd',
-                        borderRadius: '8px',
-                        minHeight: '100px',
-                    }}
-                />
+        <label className="form-label">사용일</label>
+        <input
+          name="activityDate"
+          type="date"
+          defaultValue={today}
+          required
+          className="form-input"
+        />
 
-                <button
-                    type="submit"
-                    style={{
-                        marginTop: '12px',
-                        padding: '14px',
-                        backgroundColor: '#15803d',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                    }}
-                >
-                    등록하기
-                </button>
-            </form>
-        </main>
-    ); 
+        <label className="form-label">사용량</label>
+        <input
+          name="amount"
+          type="number"
+          step="0.01"
+          placeholder="사용량을 입력하세요"
+          required
+          className="form-input"
+        />
+
+        <label className="form-label">비고</label>
+        <textarea
+          name="memo"
+          placeholder="추가로 남기고 싶은 내용을 입력하세요 (선택)"
+          className="form-textarea"
+        />
+
+        <button type="submit" className="primary-button">
+          등록하기
+        </button>
+      </form>
+    </main>
+  );
 }
