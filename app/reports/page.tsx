@@ -114,7 +114,18 @@ export default async function ReportsPage() {
                     <tbody>
                         {reports.map((report) => (
                             <tr key={report.id}>
-                                <td style={tdStyle}>{report.title}</td>
+                                <td style={tdStyle}>
+                                    <Link
+                                        href={`/reports/${report.id}`}
+                                        style={{
+                                            color: "#15803d",
+                                            fontWeight: "bold",
+                                            textDecoration: "none",
+                                        }}
+                                    >
+                                        {report.title}
+                                    </Link>
+                                </td>
                                 <td style={tdStyle}>
                                     {report.reportType === "MONTHLY"
                                         ? "월간 보고서"
