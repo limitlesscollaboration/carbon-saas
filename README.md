@@ -84,7 +84,8 @@ EcoTrack은 기업의 탄소 배출량을 효율적으로 관리하기 위한 �
 
 ## 5. 프로젝트 구조
 
-C:\Users\dlwhd\project\carbon-saas\screenshot\프로젝트 구조.png
+<img width="291" height="1262" alt="프로젝트 구조" src="https://github.com/user-attachments/assets/e3a8efa4-1bf3-4bfd-a7f3-43ed73437639" />
+
 
 ## 6. 주요 화면
 
