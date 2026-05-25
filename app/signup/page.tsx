@@ -1,67 +1,72 @@
-import {signup} from "../actions/auth";
+import Link from "next/link";
+import { signup } from "../actions/auth";
 
 export default function SignupPage() {
     return (
-        <main style ={{ maxWidth: "420px", margin: "88px auto", padding: "24px" }}>
-            <h1 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "8px" }}>
-                회원가입
-            </h1>
+        <main className="auth-page">
+            <section className="auth-card">
+                <div className="auth-logo">🌿</div>
 
-            <p style={{ color: "#666", marginBottom: "24px" }}>
-                계정과 회사를 함께 생성합니다.
-            </p>
+                <h1 className="auth-title">회원가입</h1>
 
-            <form action={signup} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <input
-                    name = "name"
-                    placeholder="이름"
-                    required
-                    style={{ padding: "12px", border: "1px solid #bbb", borderRadius: "8px" }}
-                />
+                <p className="auth-description">
+                    계정과 회사를 함께 생성하고, Carbon SaaS에서 탄소 배출 데이터를 관리하세요.
+                </p>
 
-                <input
-                    name = "email"
-                    type="email"
-                    placeholder="이메일"
-                    required
-                    style={{ padding: "12px", border: "1px solid #ddd", borderRadius: "8px" }}
-                />
+                <form action={signup} className="form-card">
+                    <label className="form-label">이름</label>
+                    <input
+                        name="name"
+                        placeholder="이름을 입력하세요"
+                        required
+                        className="form-input"
+                    />
 
-                <input
-                    name = "password"
-                    type="password"
-                    placeholder="비밀번호"
-                    required
-                    style={{ padding: "12px", border: "1px solid #ddd", borderRadius: "8px" }}
-                />
+                    <label className="form-label">이메일</label>
+                    <input
+                        name="email"
+                        type="email"
+                        placeholder="이메일을 입력하세요"
+                        required
+                        className="form-input"
+                    />
 
-                <input
-                    name = "organizationName"
-                    placeholder="회사명"
-                    required
-                    style={{ padding: "12px", border: "1px solid #ddd", borderRadius: "8px" }}
-                />
+                    <label className="form-label">비밀번호</label>
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="비밀번호를 입력하세요"
+                        required
+                        className="form-input"
+                    />
 
-                <input
-                    name = "industry"
-                    placeholder="업종"
-                    style={{ padding: "12px", border: "1px solid #ddd", borderRadius: "8px" }}
-                />
+                    <label className="form-label">회사명</label>
+                    <input
+                        name="organizationName"
+                        placeholder="회사명을 입력하세요"
+                        required
+                        className="form-input"
+                    />
 
-                <button
-                    type="submit"
-                    style={{
-                        padding: "12px",
-                        backgroundColor: "#15803d",
-                        color: "white",
-                        border: "none",
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                    }}
-                >
-                    회원가입
-                </button>
-            </form>
+                    <label className="form-label">업종</label>
+                    <input
+                        name="industry"
+                        placeholder="예: 철강, 제조, 물류"
+                        className="form-input"
+                    />
+
+                    <button type="submit" className="primary-button">
+                        회원가입
+                    </button>
+                </form>
+
+                <p className="auth-link-row">
+                    이미 계정이 있나요?{" "}
+                    <Link href="/login" className="auth-link">
+                        로그인
+                    </Link>
+                </p>
+            </section>
         </main>
-        );
-    }
+    );
+}
