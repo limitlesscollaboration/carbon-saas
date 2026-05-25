@@ -131,6 +131,21 @@ export default async function EmissionsPage() {
 
                                 {canManage && (
                                     <td style={tdStyle}>
+                                        <div style={{ display: "flex", gap: "8px"}}>
+                                            <Link
+                                                href={`/emissions/${record.id}/edit`}
+                                                style={{
+                                                    padding: "6px 10px",
+                                                    backgroundColor: "#2563eb",
+                                                    color: "white",
+                                                    borderRadius: "6px",
+                                                    textDecoration: "none",
+                                                    fontWeight : "bold",
+                                                }}
+                                            >
+                                                수정
+                                            </Link>
+                                        </div>
                                         <form action={deleteEmissionRecord}>
                                             <input type="hidden" name="recordId" value={record.id} />
 
