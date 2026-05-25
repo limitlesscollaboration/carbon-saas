@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "../actions/auth";
 import { prisma } from "@/lib/prisma";
+import { deleteReductionGoal } from "../actions/goal";
 
 export default async function GoalsPage() {
     const user = await getCurrentUser();
@@ -17,6 +18,8 @@ export default async function GoalsPage() {
     }
 
     const organizationId = firstMembership.organizationId;
+    const canManage =
+        firstMembership.role === "OWNER" || firstMembership.role === "ADMIN";
 
     const goals = await prisma.reductionGoal.findMany({
         where: {
@@ -38,42 +41,14 @@ export default async function GoalsPage() {
                 }}
             >
                 <div>
-                <h1 style={{ fontSize: "30px", fontWeight: "bold", marginBottom: "8px" }}>
-                    감축 목표 목록
-                </h1>
-                
-                <p style={{ color: "#666" }}>
-                    감축 목표 목록
-                </p>
-            </div>
+                    <h1 style={{ fontSize: "30px", fontWeight: "bold", marginBottom: "8px" }}>
+                        감축 목표 목록
+                    </h1>
 
-            <Link
-                href="/goals/new"
-                style={{
-                    padding: "10px 16px",
-                    backgroundColor: "#15803d",
-                    color: "white",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    fontWeight: "bold",
-                }}
-            >
-                목표 등록
-            </Link>
-        </div>
-
-        {goals.length === 0 ? (
-            <section
-                style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "12px",
-                    padding: "24px",
-                    textAlign: "center",
-                }}
-            >
-                <p style={{ color: "#666" , marginBottom: "16px" }}>
-                    등록된 감축 목표가 없습니다.
-                </p>
+                    <p style={{ color: "#666" }}>
+                        감축 목표 목록
+                    </p>
+                </div>
 
                 <Link
                     href="/goals/new"
@@ -88,38 +63,106 @@ export default async function GoalsPage() {
                 >
                     목표 등록
                 </Link>
-            </section>
-        ) : (
-            <table
-                style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    border: "1px solid #ddd",
-                }}
-            >
-                <thead>
-                    <tr style={{ backgroundColor: "#f9fafb" }}>
-                        <th style={thStyle}>목표 연도</th>
-                        <th style={thStyle}>목표 배출량 (톤)</th>
-                        <th style={thStyle}>기준 연도</th>
-                        <th style={thStyle}>기준 배출량 (톤)</th>
-                        <th style={thStyle}>설명</th>
-                    </tr>
-                </thead>
+            </div>
 
-                <tbody>
-                    {goals.map((goal) => (
-                        <tr key={goal.id}>
-                            <td style={tdStyle}>{goal.targetYear}</td>
-                            <td style={tdStyle}>{goal.targetEmission.toFixed(2)} kgCO₂e</td>
-                            <td style={tdStyle}>{goal.baseYear || "-"}</td>
-                            <td style={tdStyle}>{goal.baseEmission ? goal.baseEmission.toFixed(2) + " kgCO₂e" : "-"}</td>
-                            <td style={tdStyle}>{goal.description || "-"}</td>
+            {goals.length === 0 ? (
+                <section
+                    style={{
+                        border: "1px solid #ddd",
+                        borderRadius: "12px",
+                        padding: "24px",
+                        textAlign: "center",
+                    }}
+                >
+                    <p style={{ color: "#666", marginBottom: "16px" }}>
+                        등록된 감축 목표가 없습니다.
+                    </p>
+
+                    <Link
+                        href="/goals/new"
+                        style={{
+                            padding: "10px 16px",
+                            backgroundColor: "#15803d",
+                            color: "white",
+                            borderRadius: "8px",
+                            textDecoration: "none",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        목표 등록
+                    </Link>
+                </section>
+            ) : (
+                <table
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "1px solid #ddd",
+                    }}
+                >
+                    <thead>
+                        <tr style={{ backgroundColor: "#f9fafb" }}>
+                            <th style={thStyle}>목표 연도</th>
+                            <th style={thStyle}>목표 배출량 (톤)</th>
+                            <th style={thStyle}>기준 연도</th>
+                            <th style={thStyle}>기준 배출량 (톤)</th>
+                            <th style={thStyle}>설명</th>
+                            {canManage && <th style={thStyle}>관리</th>}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        )}
+                    </thead>
+
+                    <tbody>
+                        {goals.map((goal) => (
+                            <tr key={goal.id}>
+                                <td style={tdStyle}>{goal.targetYear}</td>
+                                <td style={tdStyle}>{goal.targetEmission.toFixed(2)} kgCO₂e</td>
+                                <td style={tdStyle}>{goal.baseYear || "-"}</td>
+                                <td style={tdStyle}>{goal.baseEmission ? goal.baseEmission.toFixed(2) + " kgCO₂e" : "-"}</td>
+                                <td style={tdStyle}>{goal.description || "-"}</td>
+
+                                {canManage && (
+                                    <td style={tdStyle}>
+                                        <div style={{ display: "flex", gap: "8px" }}>
+                                            <Link
+                                                href={`/goals/${goal.id}/edit`}
+                                                style={{
+                                                    padding: "6px 10px",
+                                                    backgroundColor: "#2563eb",
+                                                    color: "white",
+                                                    borderRadius: "6px",
+                                                    textDecoration: "none",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                수정
+                                            </Link>
+
+                                            <form action={deleteReductionGoal}>
+                                                <input type="hidden" name="goalId" value={goal.id} />
+
+                                                <button
+                                                    type="submit"
+                                                    style={{
+                                                        padding: "6px 10px",
+                                                        backgroundColor: "#dc2626",
+                                                        color: "white",
+                                                        border: "none",
+                                                        borderRadius: "6px",
+                                                        cursor: "pointer",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    삭제
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </main>
     );
 }
