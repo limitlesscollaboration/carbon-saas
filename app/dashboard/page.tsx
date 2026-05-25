@@ -57,7 +57,7 @@ export default async function DashboardPage() {
 
     const totalRecordCount = records.length;
 
-    const emissionByFactor =  records.reduce<Record<string, number>>((acc, record) => {
+    const emissionByFactor = records.reduce<Record<string, number>>((acc, record) => {
         const factorName = record.emissionFactor.name;
 
         if (!acc[factorName]) {
@@ -73,273 +73,293 @@ export default async function DashboardPage() {
         (a, b) => b[1] - a[1]
     )[0];
 
+    const chartValues = [35, 55, 72, 88, 64, 76];
+
+    const roleText =
+    firstMembership.role === "OWNER"
+      ? "소유자"
+      : firstMembership.role === "ADMIN"
+      ? "관리자"
+      : "일반 사용자";
+
     return (
-        <main style={{ maxWidth: "1100px", margin: "60px auto", padding: "24px" }}>
-            <header
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    marginBottom: "32px",
-                    gap: "16px",
-                }}
-            >
+        <div className="app-shell">
+            <aside className="sidebar">
                 <div>
-                    <p style={{ color: "#15803d", fontWeight: "bold", marginBottom: "8px" }}>
-                        carbon Saas Dashboard
-                    </p>
-
-                    <h1 style={{ fontSize: "34px", fontWeight: "bold", marginBottom: "8px" }}>
-                        탄소 관리 대시보드
-                    </h1>
-
-                    <p style={{ color: "#666" }}>
-                        {organization.name}의 탄소 배출 현황을 한눈에 확인하세요.
-                    </p>
-                </div>
-
-                <form action={logout}>
-                    <button
-                        type="submit"
-                        style={{
-                            padding: "10px 16px",
-                            backgroundColor: "#dc2626",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                            fontWeight: "bold"
-                        }}
-                    >
-                        로그아웃
-                    </button>
-                </form>
-            </header>
-
-            <section
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                    gap: "16px",
-                    marginBottom: "32px",
-                }}
-            >
-                <div style = {cardStyle}>
-                    <p style = {cardLabelStyle}>총 배출량</p>
-                    <p style = {cardValueStyle}>{totalEmission.toFixed(2)} kgCO₂e</p>
-                </div>
-
-                <div style = {cardStyle}>
-                    <p style = {cardLabelStyle}>등록 데이터 수</p>
-                    <p style = {cardValueStyle}>{totalRecordCount} 건</p>
-                </div>
-
-                <div style = {cardStyle}>
-                    <p style = {cardLabelStyle}>주요 배출 항목</p>
-                    <p style = {cardValueStyle}>
-                        {topEmissionFactor ? topEmissionFactor[0] : "데이터 없음"}
-                    </p>
-                </div>
-
-                <div style = {cardStyle}>
-                    <p style = {cardLabelStyle}>목표 대비 사용률</p>
-                    <p style = {cardValueStyle}>
-                        {latestGoal ? `${goalUsageRate.toFixed(2)}%` : "목표 없음"}
-                    </p>
-                </div>
-            </section>
-
-            <section
-                style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "12px",
-                    padding: "20px",
-                    marginBottom: "32px",
-                }}
-            >
-                
-                <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "16px" }}>
-                    회사 및 사용자 정보
-                </h2>
-
-                <div style = {{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                    <p> 회사명: {organization.name}</p>
-                    <p> 업종: {organization.industry || "미입력"}</p>
-                    <p> 사용자: {user.name}</p>
-                    <p> 권한: {firstMembership?.role}</p>
-                </div>
-            </section>
-
-            <section
-                style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "12px",
-                    padding: "20px",
-                    marginBottom: "32px",
-                }}
-            >
-                <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "16px" }}>
-                    감축 목표 현황
-                </h2>
-
-                {latestGoal ? (
-                    <div style = {{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                        <p> 목표 연도: {latestGoal.targetYear}년</p>
-                        <p> 목표 배출량: {latestGoal.targetEmission.toFixed(2)} kgCO₂e</p>
-                        <p> 현재 배출량: {totalEmission.toFixed(2)} kgCO₂e</p>
-                        <p> 목표 대비 사용률: {goalUsageRate.toFixed(2)}%</p>
-                            {remainingEmission >= 0 ? (
-                                <p> 남은 배출 가능량: {remainingEmission.toFixed(2)} kgCO₂e</p>
-                            ) : (
-                                <p> 목표 초과량: {Math.abs(remainingEmission).toFixed(2)} kgCO₂e</p>
-                            )}
-                        <p> 설명: {latestGoal.description || "-"}</p>
+                    <div className="sidebar-brand">
+                        <div className="sidebar-logo">🌿</div>
+                        <div>
+                            <p className="sidebar-title">Carbon SaaS</p>
+                            <p className="sidebar-subtitle">Dashboard</p>
+                        </div>
                     </div>
-                ) : (
-                    <div>
-                        <p style={{ color: "#666", marginBottom: "16px" }}>
-                            현재 등록된 감축 목표가 없습니다.
+
+                    <nav className="sidebar-nav">
+                        <Link href="/dashboard" className="sidebar-link active">
+                            <span>▦</span>
+                            대시보드
+                        </Link>
+                        <Link href="/emissions" className="sidebar-link">
+                            <span>▤</span>
+                            배출 데이터
+                        </Link>
+                        <Link href="/goals" className="sidebar-link">
+                            <span>◎</span>
+                            목표 관리
+                        </Link>
+                        <Link href="/reports" className="sidebar-link">
+                            <span>▥</span>
+                            분석 리포트
+                        </Link>
+                    </nav>
+                </div>
+
+                <div className="sidebar-card">
+                    <p className="sidebar-card-title">지속 가능한 미래</p>
+                    <p className="sidebar-card-text">
+                        기업의 탄소 배출 데이터를 기록하고 목표 대비 현황을 관리하세요.
+                    </p>
+                </div>
+            </aside>
+
+            <div className="main-area">
+                <header className="topbar">
+                    <div className="topbar-left">
+                        <button className="menu-button" type="button">
+                            ☰
+                        </button>
+                        <span className="topbar-title">Carbon SaaS Dashboard</span>
+                    </div>
+
+                    <div className="topbar-actions">
+                        <div className="notification">🔔</div>
+
+                        <details className="profile-menu">
+                            <summary className="profile-summary">
+                                <span className="profile-avatar">👤</span>
+                                <span className="profile-name">{user.name}</span>
+                            </summary>
+
+                            <div className="profile-dropdown">
+                                <div className="profile-info">
+                                    <p className="profile-user-name">{user.name}</p>
+                                    <p className="profile-user-role">{roleText}</p>
+                                </div>
+
+                                <form action={logout}>
+                                    <button type="submit" className="profile-logout-button">
+                                        로그아웃
+                                    </button>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </header>
+
+                <main className="content">
+                    <section className="hero">
+                        <p className="eyebrow">Carbon SaaS Dashboard</p>
+                        <h1 className="dashboard-title">탄소 관리 대시보드</h1>
+                        <p className="dashboard-description">
+                            {organization.name}의 탄소 배출 현황을 한눈에 확인하세요.
                         </p>
+                        <div className="leaf-decoration">🌿</div>
+                    </section>
 
-                        <Link href="/goals/new" style={primaryLinkStyle}>
-                            감축 목표 등록하기
-                        </Link>
-                    </div>
-                )}
-            </section>
+                    <section className="summary-grid">
+                        <div className="metric-card">
+                            <div className="metric-icon">🌱</div>
+                            <div>
+                                <p className="metric-label">총 배출량</p>
+                                <p className="metric-value">
+                                    {totalEmission.toLocaleString()} kgCO₂e
+                                </p>
+                            </div>
+                        </div>
 
-            <section
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "16px",
-                }}
-            >
-                <div>
-                    <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "6px" }}>
-                        최근 배출 기록
-                    </h2>
-                    <p style={{ color: "#666" }}>
-                        최근 등록된 5건의 배출 기록을 확인하세요.
-                    </p>
-                </div>
+                        <div className="metric-card">
+                            <div className="metric-icon">📋</div>
+                            <div>
+                                <p className="metric-label">등록 데이터 수</p>
+                                <p className="metric-value">{totalRecordCount}건</p>
+                            </div>
+                        </div>
 
-                <div style={{ display: "flex", gap: "8px" }}>
-                    <Link
-                        href="/emissions/new" style={primaryLinkStyle}>
-                            배출 데이터 등록
-                        </Link>
+                        <div className="metric-card">
+                            <div className="metric-icon">⚡</div>
+                            <div>
+                                <p className="metric-label">주요 배출 항목</p>
+                                <p className="metric-value">
+                                    {topEmissionFactor ? topEmissionFactor[0] : "데이터 없음"}
+                                </p>
+                            </div>
+                        </div>
 
-                    <Link href="/emissions" style={secondaryLinkStyle}>
-                        전체 기록 보기
-                    </Link>
-                </div>
-            </section>
+                        <div className="metric-card">
+                            <div className="metric-icon">🎯</div>
+                            <div>
+                                <p className="metric-label">목표 대비 사용률</p>
+                                <p className="metric-value">
+                                    {latestGoal ? `${goalUsageRate.toFixed(2)}%` : "목표 없음"}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
 
-            {recentRecords.length === 0 ? (
-                <section
-                    style={{
-                        border: "1px solid #ddd",
-                        borderRadius: "12px",
-                        padding: "32px",
-                        textAlign: "center",
-                    }}
-                >
-                    <p style={{ color: "#666", marginBottom: "16px" }}>
-                        최근 배출 데이터가 없습니다.
-                    </p>
+                    <section className="dashboard-grid">
+                        <div className="dashboard-card">
+                            <h2 className="card-title">회사 및 사용자 정보</h2>
 
-                    <Link href="/emissions/new" style={primaryLinkStyle}>
-                        배출 데이터 등록하기
-                    </Link>
-                </section>
-            ) : (
-                <table
-                    style={{
-                        width: "100%",
-                        borderCollapse: "collapse",
-                        border: "1px solid #ddd",
-                    }}
-                >
-                    <thead>
-                        <tr style={{ backgroundColor: "#f9fafb" }}>
-                            <th style={thStyle}> 사용일 </th>
-                            <th style={thStyle}> 항목   </th>
-                            <th style={thStyle}> 부서   </th>
-                            <th style={thStyle}> 사용량 </th>
-                            <th style={thStyle}> 배출량 </th>
-                            <th style={thStyle}> 등록자 </th>
-                        </tr>
-                    </thead>
+                            <div className="info-list">
+                                <div className="info-row">
+                                    <span className="info-label">회사명</span>
+                                    <span className="info-value">{organization.name}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">업종</span>
+                                    <span className="info-value">{organization.industry || "미입력"}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">사용자</span>
+                                    <span className="info-value">{user.name}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">권한</span>
+                                    <span className="info-value">{roleText}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <tbody>
-                        {recentRecords.map((record) => (
-                            <tr key={record.id}>
-                                <td style={tdStyle}>
-                                    {record.activityDate.toLocaleDateString("ko-KR")}
-                                </td>
-                                <td style={tdStyle}>{record.emissionFactor.name}</td>
-                                <td style={tdStyle}>{record.department || "-"}</td>
-                                <td style={tdStyle}>
-                                    {record.amount} {record.unit}
-                                </td>
-                                <td style={tdStyle}>
-                                    {record.emissionAmount.toFixed(2)} kgCO₂e
-                                </td>
-                                <td style={tdStyle}>{record.createdBy.name}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </main>
+                        <div className="dashboard-card">
+                            <h2 className="card-title">감축 목표 현황</h2>
+
+                            {latestGoal ? (
+                                <div className="info-list">
+                                    <div className="info-row">
+                                        <span className="info-label">목표 연도</span>
+                                        <span className="info-value">{latestGoal.targetYear}년</span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">목표 배출량</span>
+                                        <span className="info-value">
+                                            {latestGoal.targetEmission.toFixed(2)} kgCO₂e
+                                        </span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">현재 배출량</span>
+                                        <span className="info-value">
+                                            {totalEmission.toFixed(2)} kgCO₂e
+                                        </span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">사용률</span>
+                                        <span className="info-value warning-text">
+                                            {goalUsageRate.toFixed(2)}%
+                                        </span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">
+                                            {remainingEmission >= 0 ? "남은 배출량" : "목표 초과량"}
+                                        </span>
+                                        <span className="info-value warning-text">
+                                            {Math.abs(remainingEmission).toFixed(2)} kgCO₂e
+                                        </span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">설명</span>
+                                        <span className="info-value">{latestGoal.description || "-"}</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <p className="dashboard-description" style={{ marginBottom: "16px" }}>
+                                        현재 등록된 감축 목표가 없습니다.
+                                    </p>
+                                    <Link href="/goals/new" className="primary-link">
+                                        감축 목표 등록하기
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="dashboard-card">
+                            <h2 className="card-title">월별 배출량 추이</h2>
+
+                            <div className="chart-box">
+                                {chartValues.map((value, index) => (
+                                    <div
+                                        key={index}
+                                        className="chart-bar"
+                                        style={{ height: `${value}%` }}
+                                        title={`${index + 1}월`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="table-card">
+                        <div className="table-header">
+                            <div>
+                                <h2 className="table-title">최근 배출 기록</h2>
+                                <p className="table-description">
+                                    최근 등록된 배출 데이터를 확인하세요.
+                                </p>
+                            </div>
+
+                            <div className="action-row">
+                                <Link href="/emissions/new" className="primary-link">
+                                    + 배출 데이터 등록
+                                </Link>
+
+                                <Link href="/emissions" className="secondary-link">
+                                    전체 기록 보기
+                                </Link>
+                            </div>
+                        </div>
+
+                        {recentRecords.length === 0 ? (
+                            <section className="empty-box">
+                                <p className="table-description" style={{ marginBottom: "16px" }}>
+                                    최근 배출 데이터가 없습니다.
+                                </p>
+
+                                <Link href="/emissions/new" className="primary-link">
+                                    배출 데이터 등록하기
+                                </Link>
+                            </section>
+                        ) : (
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>사용일</th>
+                                        <th>항목</th>
+                                        <th>부서</th>
+                                        <th>사용량</th>
+                                        <th>배출량</th>
+                                        <th>등록자</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {recentRecords.map((record) => (
+                                        <tr key={record.id}>
+                                            <td>{record.activityDate.toLocaleDateString("ko-KR")}</td>
+                                            <td>{record.emissionFactor.name}</td>
+                                            <td>{record.department || "-"}</td>
+                                            <td>
+                                                {record.amount.toLocaleString()} {record.unit}
+                                            </td>
+                                            <td>{record.emissionAmount.toFixed(2)} kgCO₂e</td>
+                                            <td>{record.createdBy.name}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </section>
+                </main>
+            </div>
+        </div>
     );
 }
-
-const cardStyle = {
-    border: "1px solid #ddd",
-    borderRadius: "12px",
-    padding: "20px",
-    backgroundColor: "#fff",
-};
-
-const cardLabelStyle = {
-    color: "#666",
-    fontSize: "14px",
-    marginBottom: "8px",
-};
-
-const cardValueStyle = {
-    fontSize: "26px",
-    fontWeight: "bold",
-};
-
-const primaryLinkStyle = {
-    padding: "10px 16px",
-    backgroundColor: "#15803d",
-    color: "white",
-    borderRadius: "8px",
-    textDecoration: "none",
-    fontWeight: "bold",
-};
-
-const secondaryLinkStyle = {
-    padding: "10px 16px",
-    backgroundColor: "#15803d",
-    color: "white",
-    borderRadius: "8px",
-    textDecoration: "none",
-    fontWeight: "bold",
-};
-
-const thStyle = {
-    padding: "12px",
-    borderBottom: "1px solid #ddd",
-    textAlign: "left" as const,
-};
-
-const tdStyle = {
-    padding: "12px",
-    borderBottom: "1px solid #eee",
-};

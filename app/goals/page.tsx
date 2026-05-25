@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "../actions/auth";
+import { getCurrentUser, logout } from "../actions/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteReductionGoal } from "../actions/goal";
 
@@ -21,6 +21,13 @@ export default async function GoalsPage() {
     const canManage =
         firstMembership.role === "OWNER" || firstMembership.role === "ADMIN";
 
+    const roleText =
+        firstMembership.role === "OWNER"
+            ? "소유자"
+            : firstMembership.role === "ADMIN"
+                ? "관리자"
+                : "일반 사용자";
+
     const goals = await prisma.reductionGoal.findMany({
         where: {
             organizationId,
@@ -31,145 +38,209 @@ export default async function GoalsPage() {
     });
 
     return (
-        <main style={{ maxWidth: "1000px", margin: "60px auto", padding: "24px" }}>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "24px",
-                }}
-            >
+        <div className="app-shell">
+            <aside className="sidebar">
                 <div>
-                    <h1 style={{ fontSize: "30px", fontWeight: "bold", marginBottom: "8px" }}>
-                        감축 목표 목록
-                    </h1>
+                    <div className="sidebar-brand">
+                        <div className="sidebar-logo">🌿</div>
+                        <div>
+                            <p className="sidebar-title">Carbon SaaS</p>
+                            <p className="sidebar-subtitle">Dashboard</p>
+                        </div>
+                    </div>
+
+                    <nav className="sidebar-nav">
+                        <Link href="/dashboard" className="sidebar-link">
+                            <span>▦</span>
+                            대시보드
+                        </Link>
+
+                        <Link href="/emissions" className="sidebar-link">
+                            <span>▤</span>
+                            배출 데이터
+                        </Link>
+
+                        <Link href="/goals" className="sidebar-link active">
+                            <span>◎</span>
+                            목표 관리
+                        </Link>
+
+                        <Link href="/reports" className="sidebar-link">
+                            <span>▥</span>
+                            분석 리포트
+                        </Link>
+                    </nav>
                 </div>
 
-                <Link
-                    href="/goals/new"
-                    style={{
-                        padding: "10px 16px",
-                        backgroundColor: "#15803d",
-                        color: "white",
-                        borderRadius: "8px",
-                        textDecoration: "none",
-                        fontWeight: "bold",
-                    }}
-                >
-                    목표 등록
-                </Link>
-            </div>
-
-            {goals.length === 0 ? (
-                <section
-                    style={{
-                        border: "1px solid #ddd",
-                        borderRadius: "12px",
-                        padding: "24px",
-                        textAlign: "center",
-                    }}
-                >
-                    <p style={{ color: "#666", marginBottom: "16px" }}>
-                        등록된 감축 목표가 없습니다.
+                <div className="sidebar-card">
+                    <p className="sidebar-card-title">감축 목표 관리</p>
+                    <p className="sidebar-card-text">
+                        연도별 탄소 감축 목표를 설정하고 목표 대비 현황을 관리하세요.
                     </p>
+                </div>
+            </aside>
 
-                    <Link
-                        href="/goals/new"
-                        style={{
-                            padding: "10px 16px",
-                            backgroundColor: "#15803d",
-                            color: "white",
-                            borderRadius: "8px",
-                            textDecoration: "none",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        목표 등록
-                    </Link>
-                </section>
-            ) : (
-                <table
-                    style={{
-                        width: "100%",
-                        borderCollapse: "collapse",
-                        border: "1px solid #ddd",
-                    }}
-                >
-                    <thead>
-                        <tr style={{ backgroundColor: "#f9fafb" }}>
-                            <th style={thStyle}>목표 연도</th>
-                            <th style={thStyle}>목표 배출량 (톤)</th>
-                            <th style={thStyle}>기준 연도</th>
-                            <th style={thStyle}>기준 배출량 (톤)</th>
-                            <th style={thStyle}>설명</th>
-                            {canManage && <th style={thStyle}>관리</th>}
-                        </tr>
-                    </thead>
+            <div className="main-area">
+                <header className="topbar">
+                    <div className="topbar-left">
+                        <button className="menu-button" type="button">
+                            ☰
+                        </button>
+                        <span className="topbar-title">목표 관리</span>
+                    </div>
 
-                    <tbody>
-                        {goals.map((goal) => (
-                            <tr key={goal.id}>
-                                <td style={tdStyle}>{goal.targetYear}</td>
-                                <td style={tdStyle}>{goal.targetEmission.toFixed(2)} kgCO₂e</td>
-                                <td style={tdStyle}>{goal.baseYear || "-"}</td>
-                                <td style={tdStyle}>{goal.baseEmission ? goal.baseEmission.toFixed(2) + " kgCO₂e" : "-"}</td>
-                                <td style={tdStyle}>{goal.description || "-"}</td>
+                    <div className="topbar-actions">
+                        <div className="notification">🔔</div>
 
-                                {canManage && (
-                                    <td style={tdStyle}>
-                                        <div style={{ display: "flex", gap: "8px" }}>
-                                            <Link
-                                                href={`/goals/${goal.id}/edit`}
-                                                style={{
-                                                    padding: "6px 10px",
-                                                    backgroundColor: "#2563eb",
-                                                    color: "white",
-                                                    borderRadius: "6px",
-                                                    textDecoration: "none",
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                수정
-                                            </Link>
+                        <details className="profile-menu">
+                            <summary className="profile-summary">
+                                <span className="profile-avatar">👤</span>
+                                <span className="profile-name">{user.name}</span>
+                            </summary>
 
-                                            <form action={deleteReductionGoal}>
-                                                <input type="hidden" name="goalId" value={goal.id} />
+                            <div className="profile-dropdown">
+                                <div className="profile-info">
+                                    <p className="profile-user-name">{user.name}</p>
+                                    <p className="profile-user-role">{roleText}</p>
+                                </div>
 
-                                                <button
-                                                    type="submit"
-                                                    style={{
-                                                        padding: "6px 10px",
-                                                        backgroundColor: "#dc2626",
-                                                        color: "white",
-                                                        border: "none",
-                                                        borderRadius: "6px",
-                                                        cursor: "pointer",
-                                                        fontWeight: "bold",
-                                                    }}
-                                                >
-                                                    삭제
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                )}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </main>
+                                <form action={logout}>
+                                    <button type="submit" className="profile-logout-button">
+                                        로그아웃
+                                    </button>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </header>
+
+                <main className="content">
+                    <section className="hero">
+                        <h1 className="dashboard-title">감축 목표 목록</h1>
+                        <p className="dashboard-description">
+                            회사의 탄소 배출 감축 목표를 등록하고 관리합니다.
+                        </p>
+                        <div className="leaf-decoration">🎯</div>
+                    </section>
+
+                    <section className="summary-grid">
+                        <div className="metric-card">
+                            <div className="metric-icon">🎯</div>
+                            <div>
+                                <p className="metric-label">등록 목표 수</p>
+                                <p className="metric-value">{goals.length}건</p>
+                            </div>
+                        </div>
+
+                        <div className="metric-card">
+                            <div className="metric-icon">📅</div>
+                            <div>
+                                <p className="metric-label">최근 목표 연도</p>
+                                <p className="metric-value">
+                                    {goals[0] ? `${goals[0].targetYear}년` : "없음"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="metric-card">
+                            <div className="metric-icon">🌱</div>
+                            <div>
+                                <p className="metric-label">최근 목표 배출량</p>
+                                <p className="metric-value">
+                                    {goals[0] ? `${goals[0].targetEmission.toFixed(2)}` : "0"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="metric-card">
+                            <div className="metric-icon">🔐</div>
+                            <div>
+                                <p className="metric-label">현재 권한</p>
+                                <p className="metric-value">{roleText}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="table-card">
+                        <div className="table-header">
+                            <div>
+                                <h2 className="table-title">감축 목표</h2>
+                                <p className="table-description">
+                                    등록된 감축 목표를 목표 연도 기준으로 확인합니다.
+                                </p>
+                            </div>
+
+                            <div className="action-row">
+                                <Link href="/goals/new" className="primary-link">
+                                    + 목표 등록
+                                </Link>
+                            </div>
+                        </div>
+
+                        {goals.length === 0 ? (
+                            <section className="empty-box">
+                                <p className="table-description" style={{ marginBottom: "16px" }}>
+                                    등록된 감축 목표가 없습니다.
+                                </p>
+
+                                <Link href="/goals/new" className="primary-link">
+                                    첫 목표 등록하기
+                                </Link>
+                            </section>
+                        ) : (
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>목표 연도</th>
+                                        <th>목표 배출량</th>
+                                        <th>기준 연도</th>
+                                        <th>기준 배출량</th>
+                                        <th>설명</th>
+                                        {canManage && <th>관리</th>}
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {goals.map((goal) => (
+                                        <tr key={goal.id}>
+                                            <td>{goal.targetYear}</td>
+                                            <td>{goal.targetEmission.toFixed(2)} kgCO₂e</td>
+                                            <td>{goal.baseYear || "-"}</td>
+                                            <td>
+                                                {goal.baseEmission
+                                                    ? `${goal.baseEmission.toFixed(2)} kgCO₂e`
+                                                    : "-"}
+                                            </td>
+                                            <td>{goal.description || "-"}</td>
+
+                                            {canManage && (
+                                                <td>
+                                                    <div className="action-row">
+                                                        <Link
+                                                            href={`/goals/${goal.id}/edit`}
+                                                            className="edit-link"
+                                                        >
+                                                            수정
+                                                        </Link>
+
+                                                        <form action={deleteReductionGoal}>
+                                                            <input type="hidden" name="goalId" value={goal.id} />
+
+                                                            <button type="submit" className="danger-button">
+                                                                삭제
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </section>
+                </main>
+            </div>
+        </div>
     );
 }
-
-const thStyle = {
-    padding: "12px",
-    borderBottom: "1px solid #ddd",
-    textAlign: "left" as const,
-};
-
-const tdStyle = {
-    padding: "12px",
-    borderBottom: "1px solid #eee",
-};
