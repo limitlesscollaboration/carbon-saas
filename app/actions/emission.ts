@@ -75,3 +75,55 @@ export async function createEmissionRecord(formData: FormData) {
 
     redirect("/emissions");
 }
+
+export async function deleteEmissionRecord(formData: FormData) {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        redirect("/login");
+    }
+
+    const firstMembership = user.memberships[0];
+
+    if(!firstMembership) {
+        throw new Error("소속된 회사의 정보가 없습니다.")
+    }
+
+    const canDelete = 
+        firstMembership.role === "OWNER" || firstMembership.role === "ADMIN";
+
+    if (!canDelete) {
+        throw new Error("삭제 권한이 없습니다.");
+    }
+
+    const recordId = formData.get("recordId") as string;
+
+    if(!recordId) {
+        throw new Error("삭제할 배출 데이터가 없습니다.")
+    }
+
+    const record = await prisma.emissionRecord.findUnique({
+        where: {
+            id: recordId,
+        },
+    });
+
+    if (!record) {
+        throw new Error(" 배출 데이터를 찾을 수 없습니다.")
+    }
+
+    if (record.organizationId !== firstMembership.organizationId) {
+        throw new Error("삭제 권한이 없습니다.");
+    }
+
+    await prisma.emissionRecord.delete({
+        where: {
+            id: recordId,
+        },
+    });
+
+    revalidatePath("/emissions");
+    revalidatePath("/dashboard");
+
+    redirect("/emissions")
+}

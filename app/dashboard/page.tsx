@@ -188,13 +188,11 @@ export default async function DashboardPage() {
                         <p> 목표 배출량: {latestGoal.targetEmission.toFixed(2)} kgCO₂e</p>
                         <p> 현재 배출량: {totalEmission.toFixed(2)} kgCO₂e</p>
                         <p> 목표 대비 사용률: {goalUsageRate.toFixed(2)}%</p>
-                        <p>
                             {remainingEmission >= 0 ? (
                                 <p> 남은 배출 가능량: {remainingEmission.toFixed(2)} kgCO₂e</p>
                             ) : (
                                 <p> 목표 초과량: {Math.abs(remainingEmission).toFixed(2)} kgCO₂e</p>
                             )}
-                        </p>
                         <p> 설명: {latestGoal.description || "-"}</p>
                     </div>
                 ) : (
