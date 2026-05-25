@@ -41,13 +41,13 @@ export default async function GoalsPage() {
         <div className="app-shell">
             <aside className="sidebar">
                 <div>
-                    <div className="sidebar-brand">
+                    <Link href="/dashboard" className="sidebar-brand">
                         <div className="sidebar-logo">🌿</div>
                         <div>
-                            <p className="sidebar-title">Carbon SaaS</p>
-                            <p className="sidebar-subtitle">Dashboard</p>
+                            <p className="sidebar-title">EcoTrack</p>
+                            <p className="sidebar-subtitle">목표 관리</p>
                         </div>
-                    </div>
+                    </Link>
 
                     <nav className="sidebar-nav">
                         <Link href="/dashboard" className="sidebar-link">

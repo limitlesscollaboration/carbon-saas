@@ -73,26 +73,42 @@ export default async function DashboardPage() {
         (a, b) => b[1] - a[1]
     )[0];
 
-    const chartValues = [35, 55, 72, 88, 64, 76];
+    const monthlyEmissions = Array.from({ length: 12 }, (_, index) => {
+        const month = index + 1;
+
+        const total = records
+            .filter((record) => record.activityDate.getMonth() + 1 === month)
+            .reduce((sum, record) => sum + record.emissionAmount, 0);
+
+        return {
+            month,
+            total,
+        };
+    });
+
+    const maxMonthlyEmission = Math.max(
+        ...monthlyEmissions.map((item) => item.total),
+        1
+    );
 
     const roleText =
-    firstMembership.role === "OWNER"
-      ? "소유자"
-      : firstMembership.role === "ADMIN"
-      ? "관리자"
-      : "일반 사용자";
+        firstMembership.role === "OWNER"
+            ? "소유자"
+            : firstMembership.role === "ADMIN"
+                ? "관리자"
+                : "일반 사용자";
 
     return (
         <div className="app-shell">
             <aside className="sidebar">
                 <div>
-                    <div className="sidebar-brand">
+                    <Link href="/dashboard" className="sidebar-brand">
                         <div className="sidebar-logo">🌿</div>
                         <div>
-                            <p className="sidebar-title">Carbon SaaS</p>
-                            <p className="sidebar-subtitle">Dashboard</p>
+                            <p className="sidebar-title">EcoTrack</p>
+                            <p className="sidebar-subtitle">대시보드</p>
                         </div>
-                    </div>
+                    </Link>
 
                     <nav className="sidebar-nav">
                         <Link href="/dashboard" className="sidebar-link active">
@@ -128,7 +144,7 @@ export default async function DashboardPage() {
                         <button className="menu-button" type="button">
                             ☰
                         </button>
-                        <span className="topbar-title">Carbon SaaS Dashboard</span>
+                        <span className="topbar-title">대시보드</span>
                     </div>
 
                     <div className="topbar-actions">
@@ -158,7 +174,6 @@ export default async function DashboardPage() {
 
                 <main className="content">
                     <section className="hero">
-                        <p className="eyebrow">Carbon SaaS Dashboard</p>
                         <h1 className="dashboard-title">탄소 관리 대시보드</h1>
                         <p className="dashboard-description">
                             {organization.name}의 탄소 배출 현황을 한눈에 확인하세요.
@@ -217,7 +232,9 @@ export default async function DashboardPage() {
                                 </div>
                                 <div className="info-row">
                                     <span className="info-label">업종</span>
-                                    <span className="info-value">{organization.industry || "미입력"}</span>
+                                    <span className="info-value">
+                                        {organization.industry || "미입력"}
+                                    </span>
                                 </div>
                                 <div className="info-row">
                                     <span className="info-label">사용자</span>
@@ -267,7 +284,9 @@ export default async function DashboardPage() {
                                     </div>
                                     <div className="info-row">
                                         <span className="info-label">설명</span>
-                                        <span className="info-value">{latestGoal.description || "-"}</span>
+                                        <span className="info-value">
+                                            {latestGoal.description || "-"}
+                                        </span>
                                     </div>
                                 </div>
                             ) : (
@@ -283,16 +302,28 @@ export default async function DashboardPage() {
                         </div>
 
                         <div className="dashboard-card">
-                            <h2 className="card-title">월별 배출량 추이</h2>
+                            <h2 className="card-title">월별 배출량 추이 (kgCO₂e)</h2>
 
                             <div className="chart-box">
-                                {chartValues.map((value, index) => (
-                                    <div
-                                        key={index}
-                                        className="chart-bar"
-                                        style={{ height: `${value}%` }}
-                                        title={`${index + 1}월`}
-                                    />
+                                {monthlyEmissions.map((item) => (
+                                    <div key={item.month} className="chart-item">
+                                        <span className="chart-value">
+                                            {item.total > 0 ? item.total.toFixed(0) : ""}
+                                        </span>
+
+                                        <div
+                                            className="chart-bar"
+                                            style={{
+                                                height: `${Math.max(
+                                                    (item.total / maxMonthlyEmission) * 100,
+                                                    6
+                                                )}%`,
+                                            }}
+                                            title={`${item.month}월: ${item.total.toFixed(2)} kgCO₂e`}
+                                        />
+
+                                        <span className="chart-label">{item.month}월</span>
+                                    </div>
                                 ))}
                             </div>
                         </div>

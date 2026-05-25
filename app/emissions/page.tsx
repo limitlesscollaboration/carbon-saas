@@ -26,8 +26,8 @@ export default async function EmissionsPage() {
     firstMembership.role === "OWNER"
       ? "소유자"
       : firstMembership.role === "ADMIN"
-      ? "관리자"
-      : "일반 사용자";
+        ? "관리자"
+        : "일반 사용자";
 
   const records = await prisma.emissionRecord.findMany({
     where: {
@@ -50,13 +50,13 @@ export default async function EmissionsPage() {
     <div className="app-shell">
       <aside className="sidebar">
         <div>
-          <div className="sidebar-brand">
+          <Link href="/dashboard" className="sidebar-brand">
             <div className="sidebar-logo">🌿</div>
             <div>
-              <p className="sidebar-title">Carbon SaaS</p>
-              <p className="sidebar-subtitle">Dashboard</p>
+              <p className="sidebar-title">EcoTrack</p>
+              <p className="sidebar-subtitle">배출 데이터</p>
             </div>
-          </div>
+          </Link>
 
           <nav className="sidebar-nav">
             <Link href="/dashboard" className="sidebar-link">

@@ -43,13 +43,13 @@ export default async function ReportsPage() {
         <div className="app-shell">
             <aside className="sidebar">
                 <div>
-                    <div className="sidebar-brand">
+                    <Link href="/dashboard" className="sidebar-brand">
                         <div className="sidebar-logo">🌿</div>
                         <div>
-                            <p className="sidebar-title">Carbon SaaS</p>
-                            <p className="sidebar-subtitle">Dashboard</p>
+                            <p className="sidebar-title">EcoTrack</p>
+                            <p className="sidebar-subtitle">분석 리포트</p>
                         </div>
-                    </div>
+                    </Link>
 
                     <nav className="sidebar-nav">
                         <Link href="/dashboard" className="sidebar-link">
