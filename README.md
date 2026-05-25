@@ -1,4 +1,4 @@
-# EcoTrack
+<img width="2560" height="1392" alt="분석 리포트" src="https://github.com/user-attachments/assets/bf91afc8-6347-4ac6-91b8-8a14665d5902" /># EcoTrack
 
 기업의 탄소 배출 데이터를 등록하고, 감축 목표와 보고서를 관리할 수 있는 탄소 배출 관리 Saas 대시보드입니다.
 제조사, 물류사 등 기업 사용자가 전기, 연료, 운송 등과 관련된 사용 데이터를 입력하면 배출계수를 기준으로 탄소 배출량을 자동 계산하고, 대시보드에서 배출 현황과 목표 대비 사용률을 확인할 수 있습니다.
@@ -89,6 +89,34 @@ EcoTrack은 기업의 탄소 배출량을 효율적으로 관리하기 위한 �
 
 ## 6. 주요 화면
 
+### 6.1 로그인 화면
+ 
+ - 사용자는 이메일과 비밀번호를 입력하여 로그인할 수 있습니다.
+ - 로그인 후 대시보드로 이동합니다.
+
+### 6.2 회원가입 화면
+
+- 이름, 이메일, 비밀번호, 회사명, 업종을 입력하여 계정과 회사를 함께 생성합니다.
+
+### 6.3 대시보드 화면
+
+- 등록된 배출 데이터를 목록으로 확인할 수 있습니다.
+- 권한이 있는 사용자는 수정 및 삭제가 가능합니다.
+
+### 6.4 배출 데이터 화면
+
+- 등록된 배출 데이터를 목록으로 확인할 수 있습니다.
+- 권한이 있는 사용자는 수정 및 삭제가 가능합니다.
+
+### 6.5 감축 목표 화면
+
+- 회사의 감축 목표를 등록하고 관리할 수 있습니다.
+
+### 6.6 보고서 화면
+
+- 특정 기간의 배출 데이터를 기준으로 보고서를 생성하고 상세 내용을 확인할 수 있습니다.
+
+
 ## 7. 데이터 처리 방식
 
 배출 데이터 등록 시 사용자가 선택한 배출 항목의 배출계수를 기준으로 탄소 배출량을 계산합니다.
@@ -148,7 +176,22 @@ AI가 제안한 코드는 그대로 사용하지 않고, 프로젝트의 요구�
 
 GitHub 커밋 히스토리를 통해 작업 과정을 확인할 수 있습니다.
 
-## 11. 시연 영상
+## 11. 스크린샷
+
+<img width="2560" height="1392" alt="로그인 화면" src="https://github.com/user-attachments/assets/89f1dd03-c173-4d80-ab9b-186da1968746" />
+<img width="2560" height="1392" alt="회원가입 화면" src="https://github.com/user-attachments/assets/c927f8ed-fdee-4e7c-96a1-3c852f666f36" />
+<img width="2560" height="1392" alt="대시보드" src="https://github.com/user-attachments/assets/fdbb358b-b438-45b4-8d97-962249e0dda8" />
+<img width="2560" height="1392" alt="배출 데이터 목록" src="https://github.com/user-attachments/assets/ef4565cf-c88e-461b-8ef9-f0a54643d259" />
+<img width="2560" height="1392" alt="배출 데이터 등록" src="https://github.com/user-attachments/assets/243707d6-32d1-4736-b8a7-11adba644c18" />
+<img width="2560" height="1392" alt="배출 데이터 수정" src="https://github.com/user-attachments/assets/bd3690e4-129e-4a0a-8949-0ecf63d4bc59" />
+<img width="2560" height="1392" alt="감축 목표 목록" src="https://github.com/user-attachments/assets/13a291ea-a519-4226-aede-ae82684591b6" />
+<img width="2560" height="1392" alt="새 감축 목표 설정" src="https://github.com/user-attachments/assets/92731266-e6c0-4296-a537-8370ec036a2b" />
+<img width="2560" height="1392" alt="감축 목표 수정" src="https://github.com/user-attachments/assets/6c7e9cdb-0459-48b9-9176-644fd6cea4ca" />
+<img width="2560" height="1392" alt="분석 리포트" src="https://github.com/user-attachments/assets/726c550d-1080-4231-acba-7755b7f942a1" />
+<img width="2560" height="1392" alt="상세 분석 리포트" src="https://github.com/user-attachments/assets/199132c0-404e-4d11-a83c-29ad8e624755" />
+<img width="2560" height="1392" alt="보고서 생성" src="https://github.com/user-attachments/assets/aebb90d3-6a2a-4728-86f5-a9ea15e24c0b" />
+
+## 12. 시연 영상
 
 아래 항목을 중심으로 UI 실행 영상을 녹화했습니다.
 - 회원가입
@@ -162,7 +205,7 @@ GitHub 커밋 히스토리를 통해 작업 과정을 확인할 수 있습니다
 - 로그아웃
 
 
-## 12. 향후 개선 사항
+## 13. 향후 개선 사항
 
 - 사용자 권한 변경 기능 추가
     - 현재는 회원가입 시 생성된 사용자가 기본적으로 OWNER 권한을 갖습니다.
