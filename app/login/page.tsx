@@ -10,7 +10,7 @@ export default function LoginPage() {
         <h1 className="auth-title">로그인</h1>
 
         <p className="auth-description">
-          Carbon SaaS에 로그인하여 회사의 탄소 배출 현황을 관리하세요.
+          EcoTrack에 로그인하여 회사의 탄소 배출 현황을 관리하세요.
         </p>
 
         <form action={login} className="form-card">

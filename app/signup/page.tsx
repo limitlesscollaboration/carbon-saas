@@ -10,7 +10,7 @@ export default function SignupPage() {
                 <h1 className="auth-title">회원가입</h1>
 
                 <p className="auth-description">
-                    계정과 회사를 함께 생성하고, Carbon SaaS에서 탄소 배출 데이터를 관리하세요.
+                    계정과 회사를 함께 생성하고, EcoTrack에서 탄소 배출 데이터를 관리하세요.
                 </p>
 
                 <form action={signup} className="form-card">
