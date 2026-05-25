@@ -27,6 +27,18 @@ export default async function DashboardPage() {
             emissionFactor: true,
             createdBy: true,
         },
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    const latestGoal = await prisma.reductionGoal.findFirst({
+        where: {
+            organizationId,
+        },
+        orderBy: {
+            targetYear: "desc",
+        },
     });
 
     const recentRecords = records.slice(0, 5);
@@ -34,6 +46,14 @@ export default async function DashboardPage() {
     const totalEmission = records.reduce((sum, record) => {
         return sum + record.emissionAmount;
     }, 0);
+
+    const goalUsageRate = latestGoal
+        ? (totalEmission / latestGoal.targetEmission) * 100
+        : 0;
+
+    const remainingEmission = latestGoal
+        ? latestGoal.targetEmission - totalEmission
+        : 0;
 
     const totalRecordCount = records.length;
 
@@ -99,7 +119,7 @@ export default async function DashboardPage() {
             <section
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                     gap: "16px",
                     marginBottom: "32px",
                 }}
@@ -118,6 +138,13 @@ export default async function DashboardPage() {
                     <p style = {cardLabelStyle}>주요 배출 항목</p>
                     <p style = {cardValueStyle}>
                         {topEmissionFactor ? topEmissionFactor[0] : "데이터 없음"}
+                    </p>
+                </div>
+
+                <div style = {cardStyle}>
+                    <p style = {cardLabelStyle}>목표 대비 사용률</p>
+                    <p style = {cardValueStyle}>
+                        {latestGoal ? `${goalUsageRate.toFixed(2)}%` : "목표 없음"}
                     </p>
                 </div>
             </section>
@@ -141,6 +168,46 @@ export default async function DashboardPage() {
                     <p> 사용자: {user.name}</p>
                     <p> 권한: {firstMembership?.role}</p>
                 </div>
+            </section>
+
+            <section
+                style={{
+                    border: "1px solid #ddd",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    marginBottom: "32px",
+                }}
+            >
+                <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "16px" }}>
+                    감축 목표 현황
+                </h2>
+
+                {latestGoal ? (
+                    <div style = {{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                        <p> 목표 연도: {latestGoal.targetYear}년</p>
+                        <p> 목표 배출량: {latestGoal.targetEmission.toFixed(2)} kgCO₂e</p>
+                        <p> 현재 배출량: {totalEmission.toFixed(2)} kgCO₂e</p>
+                        <p> 목표 대비 사용률: {goalUsageRate.toFixed(2)}%</p>
+                        <p>
+                            {remainingEmission >= 0 ? (
+                                <p> 남은 배출 가능량: {remainingEmission.toFixed(2)} kgCO₂e</p>
+                            ) : (
+                                <p> 목표 초과량: {Math.abs(remainingEmission).toFixed(2)} kgCO₂e</p>
+                            )}
+                        </p>
+                        <p> 설명: {latestGoal.description || "-"}</p>
+                    </div>
+                ) : (
+                    <div>
+                        <p style={{ color: "#666", marginBottom: "16px" }}>
+                            현재 등록된 감축 목표가 없습니다.
+                        </p>
+
+                        <Link href="/goals/new" style={primaryLinkStyle}>
+                            감축 목표 등록하기
+                        </Link>
+                    </div>
+                )}
             </section>
 
             <section
