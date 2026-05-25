@@ -44,10 +44,6 @@ export default async function GoalsPage() {
                     <h1 style={{ fontSize: "30px", fontWeight: "bold", marginBottom: "8px" }}>
                         감축 목표 목록
                     </h1>
-
-                    <p style={{ color: "#666" }}>
-                        감축 목표 목록
-                    </p>
                 </div>
 
                 <Link
