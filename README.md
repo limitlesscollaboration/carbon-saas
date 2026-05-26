@@ -203,6 +203,10 @@ GitHub 커밋 히스토리를 통해 작업 과정을 확인할 수 있습니다
 - 보고서 상세 조회
 - 로그아웃
 
+시연 동영상: https://github.com/user-attachments/assets/af41f6fa-1818-460f-adc6-36b3005a1074
+
+
+
 
 ## 13. 향후 개선 사항
 
