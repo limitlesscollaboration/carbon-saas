@@ -77,8 +77,8 @@ export default async function ReportDetailPage({ params }: ReportDetailPageProps
           <div className="sidebar-brand">
             <div className="sidebar-logo">🌿</div>
             <div>
-              <p className="sidebar-title">Carbon SaaS</p>
-              <p className="sidebar-subtitle">Dashboard</p>
+              <p className="sidebar-title">EcoTrack</p>
+              <p className="sidebar-subtitle">상세 분석 리포트</p>
             </div>
           </div>
 
@@ -119,7 +119,7 @@ export default async function ReportDetailPage({ params }: ReportDetailPageProps
             <button className="menu-button" type="button">
               ☰
             </button>
-            <span className="topbar-title">보고서 상세</span>
+            <span className="topbar-title">상세 분석 리포트</span>
           </div>
 
           <div className="topbar-actions">
