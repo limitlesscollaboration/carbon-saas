@@ -36,7 +36,6 @@ a {
   color: inherit;
 }
 
-/* App shell */
 .app-shell {
   min-height: 100vh;
   display: grid;
@@ -345,7 +344,6 @@ a {
   pointer-events: none;
 }
 
-/* Cards */
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -529,7 +527,6 @@ a {
   gap: 10px;
 }
 
-/* Common buttons */
 .primary-button,
 .primary-link {
   display: inline-flex;
@@ -610,7 +607,6 @@ a {
   background: var(--blue-dark);
 }
 
-/* Table */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -646,7 +642,6 @@ a {
   background: white;
 }
 
-/* Form styles */
 .form-container {
   max-width: 640px;
   margin: 60px auto;
@@ -694,7 +689,6 @@ a {
   box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
 }
 
-/* Auth pages */
 .auth-page {
   min-height: 100vh;
   display: flex;
